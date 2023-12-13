@@ -1,15 +1,14 @@
 // Could we simply pass it the handle to the server with credentials and stuff already prepped????
 // Not sure? Program a bugger or something.
 
-class Exchange {
-    private var minimumOrder: Int = 0
-    private var makerFee: Int = 0
-    private var takerFee: Int = 0
+import java.sql.Connection
 
- //   private val buyOrders
-//    private val sellOrders
-    //private val trades
+class Exchange(private var minOrder: Int, private val exchDB: Connection, private val feesDB: Connection) {
 
+
+// New trades are added to your 30 day volume immediately, but trades older than 30 days are only removed every few hours. This means that sometimes you might temporarily get a lower fee than you should, but you won't get a higher fee than you should.
+// Question, does it apply accross all assets??? Ok, we are doing it just for account. Now, they makes updating it a pain?
+    // Well, How do we do it??
 
     init {
         // So, each exchange has an order book (buy, sell)
