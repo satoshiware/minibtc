@@ -1,4 +1,5 @@
 
+import java.sql.Statement
 import java.sql.Connection
 import java.sql.DriverManager
 
@@ -24,11 +25,38 @@ fun main() {
 
 
     val connection: Connection = DriverManager.getConnection(
-        "jdbc:mariadb://localhost:3306/usd_sats",
+        "jdbc:mariadb://localhost:3306/exchange_usd",
         "root", "MariaDB"
     )
 
+    //try {
+        val connection2: Connection = DriverManager.getConnection(
+            "jdbc:mariadb://localhost:3306/exchange_usd",
+            "root", "MariaDB"
+        )
+
+        val stmt: Statement = connection2.createStatement()
+
+        val sql = "CREATE TABLE buy" +
+                "(id UNSIGNED????? INTEGER not NULL, " +
+                " customer_id INTEGER not NULL, " +
+                " amount BIGINT not NULL, " +
+                " price BIGINT, " +
+                " price INTEGER, " +
+                " PRIMARY KEY ( id ))"
+
+        stmt.executeUpdate(sql);
+        System.out.println("Created table in given database...");
+
+   // } catch (SQLException e) {
+  //      e.printStackTrace();
+  //  }
+
+
+
+
     println(connection.clientInfo)
+    println(connection2.clientInfo)
 
     connection.close();
 
