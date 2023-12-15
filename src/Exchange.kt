@@ -5,6 +5,7 @@ import java.sql.Connection
 
 class Exchange(private var minOrder: Int, private val exchDB: Connection, private val feesDB: Connection) {
 
+    val v = ExchangeRules("ok")
 
 // New trades are added to your 30 day volume immediately, but trades older than 30 days are only removed every few hours. This means that sometimes you might temporarily get a lower fee than you should, but you won't get a higher fee than you should.
 // Question, does it apply accross all assets??? Ok, we are doing it just for account. Now, they makes updating it a pain?
@@ -14,7 +15,7 @@ class Exchange(private var minOrder: Int, private val exchDB: Connection, privat
         // So, each exchange has an order book (buy, sell)
         // Each exchange has a Trade book.
 
-        minimumOrder
+        //minimumOrder
     }
 
     // What is the presicion?
