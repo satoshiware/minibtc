@@ -5,7 +5,60 @@ import java.sql.Connection
 
 class Exchange(private var minOrder: Int, private val exchDB: Connection, private val feesDB: Connection) {
 
-    val v = ExchangeRules("ok")
+
+    val rules = """
+    {
+        "minOrder": 1000,
+        "makerFee": 160,
+        "takerFee": 260,
+        "timeValid": 31536000,
+        "tiers": [
+            {
+                "volume": 50000,
+                "makerFee": 140,
+                "takerFee": 240
+            },
+            {
+                "volume": 100000,
+                "makerFee": 120,
+                "takerFee": 220
+            },
+            {
+                "volume": 250000,
+                "makerFee": 100,
+                "takerFee": 200
+            },
+            {
+                "volume": 500000,
+                "makerFee": 80,
+                "takerFee": 180
+            },
+            {
+                "volume": 1000000,
+                "makerFee": 60,
+                "takerFee": 160
+            },
+            {
+                "volume": 2500000,
+                "makerFee": 40,
+                "takerFee": 140
+            },
+            {
+                "volume": 5000000,
+                "makerFee": 20,
+                "takerFee": 120
+            },
+            {
+                "volume": 10000000,
+                "makerFee": 0,
+                "takerFee": 100
+            }
+        ]
+    } """
+
+    val ddrules = ExchangeRules(rules)
+
+    Orderbook
 
 // New trades are added to your 30 day volume immediately, but trades older than 30 days are only removed every few hours. This means that sometimes you might temporarily get a lower fee than you should, but you won't get a higher fee than you should.
 // Question, does it apply accross all assets??? Ok, we are doing it just for account. Now, they makes updating it a pain?

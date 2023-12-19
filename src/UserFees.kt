@@ -7,30 +7,30 @@ class UserFees(private val feesDB: Connection) {
     // There's minus mode
     // There's audit mode.
 
-    var dData: HashMap<K, V>
+//    var dData: HashMap<K, V>
     //Array
         // userID, total volumne
-            Array // asset, data earliest time, sub_total volume.
+  //          Array // asset, data earliest time, sub_total volume.
 
 
-    [index][]
+  ///  [index][]
 
 
     // creating empty arraylist using constructor
-    var volu=ArrayList<Long><String>()
+//    var volu=ArrayList<Long><String>()
 
-    fun getMakerFee(userID: Long) {
+//    fun getMakerFee(userID: Long) {
 //        isOn = false
-    }
+ //   }
 
-    fun getTakerFee(userID: Long) {
+//    fun getTakerFee(userID: Long) {
 //        isOn = false
-    }
+//    }
 
-    fun addVolume(userID: Long, amount: Long) {
+//    fun addVolume(userID: Long, amount: Long) {
         // Well, we don't know what asset we are looking at. Yet, it get's it updated real quick.
         // maybe we better mark the asset it is .
-    }
+    //   }
 
 
     // Ok, when I think of the database, we should add each trade.
