@@ -12,7 +12,7 @@ class OrderBook {
 private class Order(val price: Long, var amount: Long, val id: Long) {
     var left: Order? = null
     var right: Order? = null
-    var sibling: Order? = null
+    var child: Order? = null
 
     fun insert(order: Order) {
         if (order.price > this.price) {
