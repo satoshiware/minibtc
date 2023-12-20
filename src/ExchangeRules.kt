@@ -5,7 +5,6 @@ class ExchangeRules(rules: String) {
     private val minOrder: Long // Minimum amount of satoshis that can be traded????????????? We need to add an extra two digits to this ?????????
     private val makerFee: Int // Maker fee rate (percent * 1000)
     private val takerFee: Int // Taker fee rate (percent * 1000)
-    private val timeValid: Long // Maximum time (seconds) an order is valid?????????????????nah, let's remove this one
     private val tiers = ArrayList<Tier>()
 
     init { // May throw NullPointerException, IllegalArgumentException, IllegalStateException, JsonDecodingException, or NumberFormatException
@@ -13,9 +12,8 @@ class ExchangeRules(rules: String) {
         minOrder = jRules.jsonObject["minOrder"]!!.jsonPrimitive.long
         makerFee = jRules.jsonObject["makerFee"]!!.jsonPrimitive.int
         takerFee = jRules.jsonObject["takerFee"]!!.jsonPrimitive.int
-        timeValid = jRules.jsonObject["timeValid"]!!.jsonPrimitive.long
         if (makerFee > 100000 || takerFee > 100000) throw IllegalArgumentException("Maker/Taker fee greater than 100000 (100%)!")
-        if (minOrder <= 0 || makerFee < 0 || takerFee < 0 || timeValid < 0) throw IllegalArgumentException("Negative number not allowed!")
+        if (minOrder <= 0 || makerFee < 0 || takerFee < 0) throw IllegalArgumentException("Negative number not allowed!")
 
         val jTiers = jRules.jsonObject["tiers"]!!.jsonArray
         for (tier in jTiers) {

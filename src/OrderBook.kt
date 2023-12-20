@@ -1,93 +1,133 @@
-class OrderBook {
+// Philosophy: Order book is built assuming sufficient memory. is that ok?
+// Philosophy: database is doubly linked, don't be afraid to add another column. more data the better.
 
-    // Add an order, execute an order
+class OrderBook() {
+    val BUY: Boolean = true;
+    val SELL: Boolean = true;
 
+    var buyOrders: Order? = null; private set
+    var sellOrders: Order? = null; private set
 
+    var buyQTY: Long; private set
+    var sellQTY: Long; private set
 
+    init {
+        buyQTY = 0
+        sellQTY = 0
+    }
 
-}
-
-
-
-private class Order(val price: Long, var amount: Long, val id: Long) {
-    var left: Order? = null
-    var right: Order? = null
-    var child: Order? = null
-
-    fun insert(order: Order) {
-        if (order.price > this.price) {
-            if (this.right == null) {
-                this.right = order
-            } else {
-                this.right!!.insert(order)
-            }
-        } else if (order.price < this.price) {
-            if (this.left == null) {
-                this.left = order
-            } else {
-                this.left!!.insert(order)
+    fun add(order: Order, type: Boolean) {
+        if(type == BUY) {
+            try {
+                buyOrders = buyOrders!!.insert(order)
+            } catch (e: NullPointerException) {
+                buyOrders = order
             }
         } else {
-            this.amount += order.amount
-            if (this.sibling == null) {
-                this.sibling = order
-            } else {
-                this.sibling!!.insert(order)
+            try {
+                sellOrders = sellOrders!!.insert(order)
+            } catch (e: NullPointerException) {
+                sellOrders = order
             }
         }
     }
 
-    fun delete(order: Order) {
-        when {
-            order.price > this.price -> scan(value, this.right, this)
-            order.price < this.price -> scan(value, this.left, this)
-            else -> removeOrder(this, null)
+    // Remove an order
+    fun remove(order_id: Long, price: Long = 0) {
+      //  first
+    }
+
+    private fun search(price: Long) {
+
+
+    //    return lastInsertion;
+    }
+
+
+
+
+    //: Boolean // what if we too full??
+    // remove an order(Order_ID: Long, Price:Long = 0) // add price to make it fast
+    // Contains_Order(order_id, Price: Long = 0): Boolean // add price to make it fast
+
+    // Get orders(val limit, val amount: Long)
+
+
+
+
+    class Order(val orderID: Long, val userID: Long, val price: Long, amount: Long) {
+        var amount: Long; private set
+        private var left: Order? = null
+        private var right: Order? = null
+        var child: Order? = null; private set
+
+        init {
+            this.amount = amount
         }
-    }
 
-/*
-    fun find(price: Long): Order? = when {
-        this.price > price -> price?.findByPrice(price)
-        this.price < price -> right?.findByPrice(price)
-        else -> this
-    }
-*/
-
-
-
-
-    // If both child nodes are null, this case is quite simple to handle and it is the only one in which we may fail to eliminate the node: if the node is a root one, we can not eliminate it. Otherwise, it is enough to set to null the parent’s corresponding child.
-    private fun removeNoChildOrder(order: Order, parent: Order?) {
-        if (parent == null) {
-            throw IllegalStateException("Can not remove the root node without child nodes")
+        internal fun insert(order: Order) {
+            if (order.price > this.price) {
+                if (this.right == null) {
+                    this.right = order
+                    order.left = this
+                } else if (order.price < this.right!!.price) {
+                    order.right = this.right
+                    this.right = order
+                    order.left = this
+                    order.right = order
+                } else {
+                    this.right!!.insert(order)
+                }
+            } else if (order.price < this.price) {
+                if (this.left == null) {
+                    this.left = order
+                    order.right = this
+                } else if (order.price > this.left!!.price) {
+                    order.left = this.left
+                    this.left = order
+                    order.right = this
+                    order.left = order
+                } else {
+                    this.left!!.insert(order)
+                }
+            } else {
+                this.amount += order.amount
+                if (this.child == null) {
+                    this.child = order
+                } else {
+                    this.child!!.insert(order)
+                }
+            }
         }
-        if (order == parent.left) {
-            parent.left = null
-        } else if (order == parent.right) {
-            parent.right = null
+
+        internal fun remove() {
+            if (this.child == null) {
+                if (this.left != null) {
+                    this.left!!.right = this.right
+                }
+                if (this.right != null) {
+                    this.right!!.left = this.left
+                }
+            } else {
+                this.child!!.left = this.left
+                this.left?.right = this.child
+                this.child!!.right = this.right
+                this.right?.left = this.child
+            }
         }
-    }
 
-    //One child is null, the other is not null In this case, we should always succeed as it is enough to “shift” the only child node into the node that we are removing:
-    private fun removeSingleChildOrder(parent: Order, child: Order) {
-        parent.price = child.price
-        parent.left = child.left
-        parent.right = child.right
-    }
-
-    //Both child nodes are not null
-    //This case is more intricate as we should find a node that is to replace the node we want to remove. One way to find this “replacement” node is to pick a node in the left subtree with the biggest key (it for sure exists). Another way is a symmetric one: we should pick a node in the right subtree with the smallest key (it exists as well). Here, we choose the first one:
-    private fun removeTwoChildOrder(order: Order) {
-        val leftChild = order.left!!
-        leftChild.right?.let {
-            val maxParent = findParentOfMaxChild(leftChild)
-            maxParent.right?.let {
-                order.price = it.price
-                maxParent.right = null
-            } ?: throw IllegalStateException("Node with max child must have the right child!")
-        } ?: run {
-            order.price = leftChild.price
-            order.left = leftChild.left
+        //    fun find(price: Long): Order? = when {
+//        this.price > price -> price?.findByPrice(price)
+//        this.price < price -> right?.findByPrice(price)
+//        else -> this
+//    }
+        private fun find(orderID: Long): Order? {
+            if (this.orderID == orderID)
+                return this
+            else if (this.right == null)
+                return null
+            else
+                return this.right!!.find(orderID)
         }
     }
 }
